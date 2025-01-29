@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { fetchTasks, addTask, deleteTask, updateTask } from '../api/taskService';
+import { fetchTasks, addTask, deleteTask, updateTask ,toggleTaskCompletion} from '../api/taskService';
 import { getStoredToken } from '../api/authService';
 
 // Create Task Context
@@ -78,8 +78,23 @@ export const TaskProvider = ({ children }) => {
     }
   };
 
+
+  const toggleTask = async (taskId, isCompleted) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      await toggleTaskCompletion(taskId, isCompleted);
+      loadTasks(); // ✅ Immediately re-fetch tasks after toggling
+    } catch (err) {
+      setError('Failed to toggle task completion');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+
   return (
-    <TaskContext.Provider value={{ tasks, loadTasks, createTask, removeTask, editTask, isLoading, error }}>
+    <TaskContext.Provider value={{ tasks, loadTasks, createTask, removeTask, editTask,toggleTask, isLoading, error }}>
       {children}
     </TaskContext.Provider>
   );

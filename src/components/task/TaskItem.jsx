@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import TaskContext from '../../context/TaskContext';
 
 const TaskItem = ({ task }) => {
-  const { removeTask, editTask, loadTasks, isLoading } = useContext(TaskContext); // ✅ Add loadTasks to re-fetch tasks
+  const { removeTask, editTask, toggleTask, isLoading } = useContext(TaskContext);
   const [isEditing, setIsEditing] = useState(false);
   const [editedTask, setEditedTask] = useState({ name: task.name, description: task.description });
 
@@ -11,13 +11,14 @@ const TaskItem = ({ task }) => {
   };
 
   const handleSaveEdit = async () => {
-    await editTask(task.id, editedTask); // ✅ Ensure API updates backend
-    loadTasks(); // ✅ Re-fetch tasks after editing
+    await editTask(task.id, editedTask);
     setIsEditing(false);
   };
 
   return (
-    <div className="flex flex-col bg-gray-100 p-4 rounded-md shadow-md w-80">
+    <div className={`bg-white shadow-lg rounded-lg p-4 w-80 transition-transform hover:scale-105 
+      ${task.is_completed ? 'border-l-4 border-green-500' : 'border-l-4 border-red-500'}`}>
+      
       {isEditing ? (
         <>
           <input
@@ -25,31 +26,41 @@ const TaskItem = ({ task }) => {
             name="name"
             value={editedTask.name}
             onChange={handleEditChange}
-            className="border p-2 w-full rounded-md"
+            className="border p-2 w-full rounded-md focus:ring focus:ring-blue-400"
           />
           <textarea
             name="description"
             value={editedTask.description}
             onChange={handleEditChange}
-            className="border p-2 w-full rounded-md mt-2"
+            className="border p-2 w-full rounded-md mt-2 focus:ring focus:ring-blue-400"
           ></textarea>
-          <div className="mt-4 flex space-x-4">
-            <button onClick={handleSaveEdit} className="text-green-500 hover:underline">
-              Save
-            </button>
-            <button onClick={() => setIsEditing(false)} className="text-gray-500 hover:underline">
-              Cancel
-            </button>
+          <div className="mt-4 flex justify-between">
+            <button onClick={handleSaveEdit} className="bg-green-500 text-white px-4 py-2 rounded-md">Save</button>
+            <button onClick={() => setIsEditing(false)} className="text-gray-500 hover:underline">Cancel</button>
           </div>
         </>
       ) : (
         <>
-          <h3 className="text-lg font-bold">{task.name}</h3>
+          <h3 className="text-xl font-bold text-gray-800">{task.name}</h3>
           <p className="text-gray-600 mt-2">{task.description}</p>
-          <div className="mt-4 flex space-x-4">
+
+          {/* ✅ Status Label */}
+          <p className={`mt-2 text-sm font-semibold ${task.is_completed ? 'text-green-500' : 'text-red-500'}`}>
+            {task.is_completed ? 'Completed' : 'Pending'}
+          </p>
+
+          <div className="mt-4 flex justify-between">
+            <button 
+              onClick={() => toggleTask(task.id, !task.is_completed)} 
+              className={`px-4 py-2 rounded-md transition duration-200 
+                ${task.is_completed ? 'bg-gray-400 text-white' : 'bg-green-500 text-white'}`}>
+              {task.is_completed ? 'Mark as Pending' : 'Mark as Completed'}
+            </button>
+
             <button onClick={() => setIsEditing(true)} className="text-blue-500 hover:underline">
               Edit
             </button>
+
             <button onClick={() => removeTask(task.id)} className="text-red-500 hover:underline" disabled={isLoading}>
               {isLoading ? 'Deleting...' : 'Delete'}
             </button>

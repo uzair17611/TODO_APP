@@ -39,3 +39,13 @@ export const updateTask = async (taskId, taskData) => {
   const response = await api.put(`${API_BASE_URL}/tasks/${taskId}`, taskData);
   return response.data;
 };
+
+
+
+
+export const toggleTaskCompletion = async (taskId, isCompleted) => {
+  console.log("taskId",taskId)
+  console.log("isCompleted",isCompleted)
+ const response = await api.put(`${API_BASE_URL}/tasks/${taskId}/toggle`, { is_completed: isCompleted });
+ return response.data;
+};
