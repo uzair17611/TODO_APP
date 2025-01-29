@@ -2,9 +2,9 @@ import React, { useContext, useState } from 'react';
 import TaskContext from '../../context/TaskContext';
 
 const TaskItem = ({ task }) => {
-  const { removeTask, editTask, toggleTask, isLoading } = useContext(TaskContext);
+  const { removeTask, editTask, toggleTask } = useContext(TaskContext);
   const [isEditing, setIsEditing] = useState(false);
-  const [editedTask, setEditedTask] = useState({ name: task.name, description: task.description });
+  const [editedTask, setEditedTask] = useState({ ...task });
 
   const handleEditChange = (e) => {
     setEditedTask({ ...editedTask, [e.target.name]: e.target.value });
@@ -15,9 +15,14 @@ const TaskItem = ({ task }) => {
     setIsEditing(false);
   };
 
+  const handleToggle = async () => {
+    await toggleTask(task.id, !editedTask.is_completed);
+    setEditedTask((prevTask) => ({ ...prevTask, is_completed: !prevTask.is_completed })); // ✅ Update locally
+  };
+
   return (
     <div className={`bg-white shadow-lg rounded-lg p-4 w-80 transition-transform hover:scale-105 
-      ${task.is_completed ? 'border-l-4 border-green-500' : 'border-l-4 border-red-500'}`}>
+      ${editedTask.is_completed ? 'border-l-4 border-green-500' : 'border-l-4 border-red-500'}`}>
       
       {isEditing ? (
         <>
@@ -41,28 +46,28 @@ const TaskItem = ({ task }) => {
         </>
       ) : (
         <>
-          <h3 className="text-xl font-bold text-gray-800">{task.name}</h3>
-          <p className="text-gray-600 mt-2">{task.description}</p>
+          <h3 className="text-xl font-bold text-gray-800">{editedTask.name}</h3>
+          <p className="text-gray-600 mt-2">{editedTask.description}</p>
 
           {/* ✅ Status Label */}
-          <p className={`mt-2 text-sm font-semibold ${task.is_completed ? 'text-green-500' : 'text-red-500'}`}>
-            {task.is_completed ? 'Completed' : 'Pending'}
+          <p className={`mt-2 text-sm font-semibold ${editedTask.is_completed ? 'text-green-500' : 'text-red-500'}`}>
+            {editedTask.is_completed ? 'Completed' : 'Pending'}
           </p>
 
           <div className="mt-4 flex justify-between">
             <button 
-              onClick={() => toggleTask(task.id, !task.is_completed)} 
+              onClick={handleToggle}
               className={`px-4 py-2 rounded-md transition duration-200 
-                ${task.is_completed ? 'bg-gray-400 text-white' : 'bg-green-500 text-white'}`}>
-              {task.is_completed ? 'Mark as Pending' : 'Mark as Completed'}
+                ${editedTask.is_completed ? 'bg-gray-400 text-white' : 'bg-green-500 text-white'}`}>
+              {editedTask.is_completed ? 'Mark as Pending' : 'Mark as Completed'}
             </button>
 
             <button onClick={() => setIsEditing(true)} className="text-blue-500 hover:underline">
               Edit
             </button>
 
-            <button onClick={() => removeTask(task.id)} className="text-red-500 hover:underline" disabled={isLoading}>
-              {isLoading ? 'Deleting...' : 'Delete'}
+            <button onClick={() => removeTask(task.id)} className="text-red-500 hover:underline">
+              Delete
             </button>
           </div>
         </>

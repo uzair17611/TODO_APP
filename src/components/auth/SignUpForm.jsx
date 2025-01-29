@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { z } from 'zod';
 import { useNavigate } from 'react-router-dom';
-import { FiEye, FiEyeOff } from 'react-icons/fi'; // ✅ Eye Icon for Password Toggle
+import { FiEye, FiEyeOff } from 'react-icons/fi'; 
 import useAuth from '../../hooks/useAuth';
 
-// ✅ Define validation schema with Zod
+
 const signupSchema = z
   .object({
     name: z.string().min(3, 'Name must be at least 3 characters long').max(50, 'Name too long'),
@@ -32,7 +32,7 @@ const SignUpForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      signupSchema.parse(form); // ✅ Validate form with Zod
+      signupSchema.parse(form); 
       setErrors({});
 
       console.log("Submitting payload:", { name: form.name, email: form.email, password: form.password });
@@ -55,18 +55,18 @@ const SignUpForm = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
       <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md border border-gray-200">
         
-        {/* ✅ Title */}
+    
         <h1 className="text-3xl font-bold text-center text-blue-600 mb-6">
           Create Your Account 🚀
         </h1>
 
-        {/* ✅ Display Error Messages */}
+   
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
-        {/* ✅ Signup Form */}
+    
         <form onSubmit={handleSubmit} className="space-y-4">
 
-          {/* Name Input */}
+        
           <div>
             <label className="block text-gray-700 font-medium">Full Name</label>
             <input
@@ -80,7 +80,7 @@ const SignUpForm = () => {
             {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
           </div>
 
-          {/* Email Input */}
+ 
           <div>
             <label className="block text-gray-700 font-medium">Email Address</label>
             <input
@@ -94,7 +94,7 @@ const SignUpForm = () => {
             {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
           </div>
 
-          {/* Password Input with Toggle */}
+      
           <div className="relative">
             <label className="block text-gray-700 font-medium">Password</label>
             <input
@@ -114,7 +114,7 @@ const SignUpForm = () => {
             {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
           </div>
 
-          {/* Confirm Password Input with Toggle */}
+       
           <div className="relative">
             <label className="block text-gray-700 font-medium">Confirm Password</label>
             <input
@@ -134,7 +134,7 @@ const SignUpForm = () => {
             {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>}
           </div>
 
-          {/* Submit Button */}
+ 
           <button
             type="submit"
             className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 w-full rounded-lg transition duration-200"
@@ -144,16 +144,16 @@ const SignUpForm = () => {
           </button>
         </form>
 
-        {/* Login Redirect */}
+     
         <p className="mt-4 text-center text-gray-600 text-sm">
           Already have an account?{' '}
-          <span onClick={() => navigate('/login')} className="text-blue-500 cursor-pointer hover:underline">
+          <span onClick={() => navigate('/')} className="text-blue-500 cursor-pointer hover:underline">
             Log in here
           </span>
         </p>
       </div>
 
-      {/* ✅ Loader Spinner */}
+   
       {isLoading && (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
           <div className="w-12 h-12 border-4 border-white border-dotted rounded-full animate-spin"></div>

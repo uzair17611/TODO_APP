@@ -10,7 +10,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadTasks().finally(() => setLoading(false)); // ✅ Load tasks when Dashboard mounts
+    loadTasks().finally(() => setLoading(false)); 
   }, []);
 
   return (

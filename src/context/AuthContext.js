@@ -1,10 +1,10 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { loginUser, registerUser, logoutUser, getStoredUser, getStoredToken } from '../api/authService';
 
-// Create Auth Context
+
 const AuthContext = createContext();
 
-// Provide Auth Context
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(getStoredUser());
   const [token, setToken] = useState(getStoredToken());
@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null);
 
   const login = async (credentials) => {
-    console.log("Received credentials:", credentials); // ✅ Debugging
+    console.log("Received credentials:", credentials); 
     console.log("Email:", credentials.email); 
     console.log("Password:", credentials.password); 
   
@@ -45,10 +45,10 @@ export const AuthProvider = ({ children }) => {
       setToken(data.token);
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
-      return true; // ✅ Return success to navigate in Signup Form
+      return true; 
     } catch (err) {
       setError(err.response?.data?.error || 'Signup failed');
-      return false; // ❌ Return failure
+      return false; 
     } finally {
       setIsLoading(false);
     }

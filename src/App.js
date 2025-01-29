@@ -4,6 +4,8 @@ import LoginPage from './pages/Login';
 import SignUp from './pages/SignUp';
 import Dashboard from './pages/Dashboard';
 import './App.css';
+import Notfound from './pages/Notfound';
+
 
 function App() {
   return (
@@ -13,6 +15,7 @@ function App() {
           <Route path="/" element={<LoginPage />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="*" element={<Notfound />} />
         </Routes>
       </div>
     </Router>

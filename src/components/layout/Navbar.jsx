@@ -12,16 +12,15 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           
-          {/* Logo */}
+     
           <Link to="/" className="text-2xl font-bold text-blue-600">TodoApp</Link>
 
-          {/* Navigation Links */}
+     
           <div className="hidden md:flex space-x-6">
             <Link to="/" className="text-gray-700 hover:text-blue-600 transition duration-300">Home</Link>
             {user && <Link to="/dashboard" className="text-gray-700 hover:text-blue-600 transition duration-300">Dashboard</Link>}
           </div>
 
-          {/* User Info & Logout Button */}
           <div className="flex items-center space-x-4">
             {user ? (
               <>
@@ -40,7 +39,7 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* Mobile Menu Button */}
+    
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="md:hidden focus:outline-none"
@@ -53,7 +52,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
       {isOpen && (
         <div className="md:hidden bg-white shadow-lg p-4 space-y-2">
           <Link to="/" className="block text-gray-700 hover:text-blue-600 transition duration-300">Home</Link>

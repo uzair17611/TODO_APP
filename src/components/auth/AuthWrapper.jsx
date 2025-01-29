@@ -3,13 +3,13 @@ import { Navigate, Outlet } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 
 const AuthWrapper = () => {
-  const { isAuthenticated } = useAuth(); // Check if user is logged in
+  const { isAuthenticated } = useAuth(); 
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />; // Redirect to login if not authenticated
+    return <Navigate to="/" replace />; 
   }
 
-  return <Outlet />; // Render child components if authenticated
+  return <Outlet />; 
 };
 
 export default AuthWrapper;

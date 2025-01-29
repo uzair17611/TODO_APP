@@ -1,18 +1,17 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { fetchTasks, addTask, deleteTask, updateTask ,toggleTaskCompletion} from '../api/taskService';
+import { fetchTasks, addTask, deleteTask, updateTask, toggleTaskCompletion } from '../api/taskService';
 import { getStoredToken } from '../api/authService';
 
-// Create Task Context
+
 const TaskContext = createContext();
 
-// Provide Task Context
+
 export const TaskProvider = ({ children }) => {
   const [tasks, setTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const token = getStoredToken(); // Get stored token for API requests
+  const token = getStoredToken();
 
-  // Fetch tasks when component mounts
   useEffect(() => {
     if (token) {
       loadTasks();
@@ -23,7 +22,7 @@ export const TaskProvider = ({ children }) => {
     setIsLoading(true);
     setError(null);
     try {
-      const data = await fetchTasks(token);
+      const data = await fetchTasks();
       setTasks(data);
     } catch (err) {
       setError('Failed to load tasks');
@@ -32,15 +31,13 @@ export const TaskProvider = ({ children }) => {
     }
   };
 
-
-  console.log("task",tasks)
-
+ 
   const createTask = async (taskData) => {
     setIsLoading(true);
     setError(null);
     try {
-      const newTask = await addTask(taskData, token);
-      setTasks((prevTasks) => [...prevTasks, newTask]);
+      const newTask = await addTask(taskData);
+      setTasks((prevTasks) => [newTask, ...prevTasks]);
     } catch (err) {
       setError('Failed to add task');
     } finally {
@@ -48,14 +45,13 @@ export const TaskProvider = ({ children }) => {
     }
   };
 
+ 
   const removeTask = async (taskId) => {
-
-    console.log("taskId",taskId)
     setIsLoading(true);
     setError(null);
     try {
-      await deleteTask(taskId, token);
-      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
+      await deleteTask(taskId);
+      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId)); 
     } catch (err) {
       setError('Failed to delete task');
     } finally {
@@ -63,14 +59,16 @@ export const TaskProvider = ({ children }) => {
     }
   };
 
+  // ✅ Edit Task and Update UI
   const editTask = async (taskId, updatedTask) => {
     setIsLoading(true);
     setError(null);
+    loadTasks()
     try {
-      const updatedTaskData = await updateTask(taskId, updatedTask, token);
+      const updatedTaskData = await updateTask(taskId, updatedTask);
       setTasks((prevTasks) =>
         prevTasks.map((task) => (task.id === taskId ? updatedTaskData : task))
-      );
+      ); // ✅ Update task in the list
     } catch (err) {
       setError('Failed to update task');
     } finally {
@@ -82,19 +80,23 @@ export const TaskProvider = ({ children }) => {
   const toggleTask = async (taskId, isCompleted) => {
     setIsLoading(true);
     setError(null);
+    loadTasks()
     try {
-      await toggleTaskCompletion(taskId, isCompleted);
-      loadTasks(); // ✅ Immediately re-fetch tasks after toggling
+      const updatedTask = await toggleTaskCompletion(taskId, isCompleted);
+      setTasks((prevTasks) =>
+        prevTasks.map((task) =>
+          task.id === taskId ? { ...task, is_completed: updatedTask.is_completed } : task
+        )
+      ); 
     } catch (err) {
-      setError('Failed to toggle task completion');
+      setError('Failed to update task');
     } finally {
       setIsLoading(false);
     }
   };
 
-
   return (
-    <TaskContext.Provider value={{ tasks, loadTasks, createTask, removeTask, editTask,toggleTask, isLoading, error }}>
+    <TaskContext.Provider value={{ tasks, loadTasks, createTask, removeTask, editTask, toggleTask, isLoading, error }}>
       {children}
     </TaskContext.Provider>
   );
